@@ -156,7 +156,7 @@ show_section(
         LIGHTING_CONDITION,
         ROUND(AVG(INJURIES_TOTAL), 3) AS avg_injuries
     FROM CrashTable
-    WHERE LIGHTING_CONDITION IN ('DAYLIGHT', 'DARKNESS', 'DARKNESS - LIGHTED ROAD')
+    WHERE LIGHTING_CONDITION IN ('DAYLIGHT', 'DARKNESS', 'DARKNESS, LIGHTED ROAD')
     GROUP BY LIGHTING_CONDITION
     ORDER BY avg_injuries DESC
     """
@@ -252,7 +252,6 @@ show_section(
     )
     GROUP BY CRASH_DAY_OF_WEEK
     ORDER BY avg_crashes_per_hour DESC
-    LIMIT 1
     """
 )
 
