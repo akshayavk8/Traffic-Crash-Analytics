@@ -4,34 +4,43 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import streamlit as st
 
-# ── Database Setup ──────────────────────────────────────────
-DB_PATH = "traffic_crashes.db"
-CSV_PATH = "traffic_crashes.csv"
-
-# Google Drive file ID — taken directly from your project document
+DB_PATH = "/tmp/traffic_crashes.db"
+CSV_PATH = "/tmp/traffic_crashes.csv"
 FILE_ID = "1jAFsxF8ri--wYC1A-8k_Otdlf8xfcODN"
 
-if not os.path.exists(DB_PATH):
+@st.cache_resource
+def get_engine():
+    # Download CSV if not present
     if not os.path.exists(CSV_PATH):
-        with st.spinner("Downloading dataset from Google Drive... (~2 mins)"):
+        with st.spinner("Downloading dataset... please wait"):
             gdown.download(
                 f"https://drive.google.com/uc?id={FILE_ID}",
                 CSV_PATH,
                 quiet=False
             )
-    with st.spinner("Building database... please wait..."):
-        df = pd.read_csv(CSV_PATH, low_memory=False)
-        engine = create_engine(f"sqlite:///{DB_PATH}")
-        df.to_sql("CrashTable", con=engine, if_exists="replace", index=False)
-        st.success("Database ready!")
 
-engine = create_engine(f"sqlite:///{DB_PATH}")
+    # Build DB if not present
+    if not os.path.exists(DB_PATH):
+        with st.spinner("Building database... please wait"):
+            df = pd.read_csv(CSV_PATH, low_memory=False)
+            engine = create_engine(f"sqlite:///{DB_PATH}")
+            df.to_sql("CrashTable", con=engine, if_exists="replace", index=False)
+
+    return create_engine(f"sqlite:///{DB_PATH}")
+
+engine = get_engine()
 
 def run_query(sql):
     with engine.connect() as conn:
         return pd.read_sql(text(sql), conn)
 
-# ── Page Config ─────────────────────────────────────────────
+# Page config
+st.set_page_config(
+    page_title="Traffic Crash Analytics",
+    page_icon="*",
+    layout="wide"
+)
+
 st.title("Traffic Crash Analytics & Safety Intelligence Platform")
 st.markdown("**Chicago Traffic Crash Data | 600,000+ Records**")
 st.markdown("---")
