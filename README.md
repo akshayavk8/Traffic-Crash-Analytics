@@ -22,6 +22,7 @@ Download database file (.db) here: [traffic_crashes.db](https://drive.google.com
 | `app.py` | Streamlit dashboard |
 | `requirements.txt` | Required libraries |
 | `query_results/` | CSV exports of all 15 query outputs |
+| `Project Report.docx` | Full analysis report with query insights and findings |
 
 ## SQL Concepts Used
 - Aggregations (COUNT, SUM, AVG)
