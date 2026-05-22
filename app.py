@@ -32,7 +32,7 @@ st.markdown("---")
 # Helper function to display each query section
 def show_section(title, insight, sql):
     st.subheader(title)
-    st.caption(f"💡 **Business Insight:** {insight}")
+    st.caption(f" **Business Insight:** {insight}")
     df = run_query(sql)
     st.dataframe(df, use_container_width=True)
     st.markdown("---")
@@ -324,4 +324,4 @@ show_section(
     """
 )
 
-st.success("✅ All 15 queries executed live from the database.")
+st.success("All 15 queries executed successfully!")
