@@ -32,4 +32,4 @@ Download database file (.db) here: [traffic_crashes.db](https://drive.google.com
 - HAVING
 
 ## Live App
-[Click here to view the Streamlit app](your-streamlit-link-here)
+Click here to view the Streamlit app: https://traffic-crash-analytics-i9gappaxinsfzzcgbz4t2sw.streamlit.app/ 
