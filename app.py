@@ -19,12 +19,18 @@ def get_engine():
                 quiet=False
             )
 
-    # Build DB if not present
+    # Build DB in chunks if not present
     if not os.path.exists(DB_PATH):
-        with st.spinner("Building database... please wait"):
-            df = pd.read_csv(CSV_PATH, low_memory=False)
+        with st.spinner("Building database in chunks... please wait"):
             engine = create_engine(f"sqlite:///{DB_PATH}")
-            df.to_sql("CrashTable", con=engine, if_exists="replace", index=False)
+            chunk_size = 50000  # process 50,000 rows at a time
+            first_chunk = True
+            for chunk in pd.read_csv(CSV_PATH, chunksize=chunk_size, low_memory=False):
+                if first_chunk:
+                    chunk.to_sql("CrashTable", con=engine, if_exists="replace", index=False)
+                    first_chunk = False
+                else:
+                    chunk.to_sql("CrashTable", con=engine, if_exists="append", index=False)
 
     return create_engine(f"sqlite:///{DB_PATH}")
 
@@ -37,7 +43,7 @@ def run_query(sql):
 # Page config
 st.set_page_config(
     page_title="Traffic Crash Analytics",
-    page_icon="*",
+    page_icon=" * ",
     layout="wide"
 )
 
